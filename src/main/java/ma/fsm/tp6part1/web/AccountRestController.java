@@ -1,7 +1,11 @@
 package ma.fsm.tp6part1.web;
 
+import ma.fsm.tp6part1.dto.BankAccountRequestDTO;
+import ma.fsm.tp6part1.dto.BankAccountResponseDTO;
 import ma.fsm.tp6part1.entities.BankAccount;
+import ma.fsm.tp6part1.mappers.AccountMapper;
 import ma.fsm.tp6part1.repositories.BankAccountRepository;
+import ma.fsm.tp6part1.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -14,9 +18,13 @@ import java.util.UUID;
 public class AccountRestController {
 
     private BankAccountRepository bankAccountRepository;
+    private AccountService accountService;
+    private AccountMapper accountMapper;
 
-    public AccountRestController(BankAccountRepository bankAccountRepository) {
+    public AccountRestController(BankAccountRepository bankAccountRepository, AccountService accountService, AccountMapper accountMapper) {
         this.bankAccountRepository = bankAccountRepository;
+        this.accountService = accountService;
+        this.accountMapper = accountMapper;
     }
 
 
@@ -32,9 +40,8 @@ public class AccountRestController {
     }
 
     @PostMapping("/bankAccounts")
-    public BankAccount save(@RequestBody BankAccount bankAccount) {
-        if (bankAccount.getId()==null) bankAccount.setId(UUID.randomUUID().toString());
-        return bankAccountRepository.save(bankAccount);
+    public BankAccountResponseDTO save(@RequestBody BankAccountRequestDTO requestDTO) {
+        return accountService.addAccount(requestDTO);
     }
 
     @PutMapping("/bankAccounts/{id}")
