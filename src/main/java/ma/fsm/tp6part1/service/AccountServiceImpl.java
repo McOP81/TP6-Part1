@@ -1,6 +1,5 @@
 package ma.fsm.tp6part1.service;
 
-import lombok.AllArgsConstructor;
 import ma.fsm.tp6part1.dto.BankAccountRequestDTO;
 import ma.fsm.tp6part1.dto.BankAccountResponseDTO;
 import ma.fsm.tp6part1.entities.BankAccount;
@@ -38,6 +37,20 @@ public class AccountServiceImpl implements AccountService {
 //                .type(saveBankAccount.getType())
 //                .currency(saveBankAccount.getCurrency())
 //                .build();
+        BankAccountResponseDTO bankAccountResponseDTO = accountMapper.fromBankAccount(saveBankAccount);
+        return bankAccountResponseDTO;
+    }
+
+    @Override
+    public BankAccountResponseDTO updateAccount(String id, BankAccountRequestDTO bankAccountDTO) {
+        BankAccount bankAccount = BankAccount.builder()
+                .id(id)
+                .createdAt(new Date())
+                .balance(bankAccountDTO.getBalance())
+                .type(bankAccountDTO.getType())
+                .currency(bankAccountDTO.getCurrency())
+                .build();
+        BankAccount saveBankAccount = bankAccountRepository.save(bankAccount);
         BankAccountResponseDTO bankAccountResponseDTO = accountMapper.fromBankAccount(saveBankAccount);
         return bankAccountResponseDTO;
     }
